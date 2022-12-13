@@ -24,11 +24,8 @@
 {% block content %}
     <!-- Alert -->
     <div id="alert-template" class="d-none">
-        <div class="alert alert-dismissible fade show" role="alert">
+        <div class="alert alert-dismissible show" role="alert">
             <span class="alert-message"></span>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
         </div>
     </div>
 
@@ -88,6 +85,23 @@
             </div>
         </div>
     </div>
+
+    <!-- Window warning modal -->
+    <div id="modal-window-warning" class="modal" tabindex="-1" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title font-weight-bold">Warning!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You have moved out of current exam window!
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 {% block footer %}
     <div class="bg-dark fixed-bottom py-2">
@@ -135,5 +149,6 @@
 
     <script type="text/javascript" src="{% static 'core/js/exam_start.js' %}"></script>
     <script type="text/javascript" src="{% static 'core/js/timer.js' %}"></script>
+    <script type="text/javascript" src="{% static 'core/js/warning.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/confirm_form_submit.js' %}"></script>
 {% endblock footer %}

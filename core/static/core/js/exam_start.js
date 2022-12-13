@@ -84,6 +84,7 @@ jQuery_3_6_0(document).ready(function(){
         const alert = $alert.clone().addClass('alert-' + color);
         alert.find('.alert-message').html(message);
         $alert_container.empty().append(alert);
+        alert.fadeOut(5000);
     }
 
     function get_question(){
