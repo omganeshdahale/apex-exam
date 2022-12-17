@@ -203,6 +203,14 @@ jQuery_3_6_0(document).ready(function(){
         });
     });
 
+
+    jQuery_3_6_0("#submit-form").submit(function () {
+        ajax_submit_form.bind(this)(function (data) {
+            window.location.replace(data.url);
+        });
+        return false;
+    });
+
     // Get initial question
     jQuery_3_6_0('#first').click();
 });

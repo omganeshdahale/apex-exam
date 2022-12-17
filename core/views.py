@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from .decorators import *
@@ -238,6 +239,17 @@ def exam_submit(request, exam_pk):
     session.submitted = timezone.now()
     session.save()
 
+    return JsonResponse(
+        {"status": "ok", "url": reverse("exam_submit_detail", args=[session.pk])}
+    )
+
+
+@login_required
+@is_verified_student
+def exam_submit_detail(request, session_pk):
+    session = get_object_or_404(
+        Session, pk=session_pk, user=request.user, completed=True
+    )
     return render(request, "core/submit.html", {"session": session})
 
 

@@ -29,6 +29,11 @@ urlpatterns = [
         name="exam_submit",
     ),
     path(
+        "students/sessions/<int:session_pk>/",
+        exam_submit_detail,
+        name="exam_submit_detail",
+    ),
+    path(
         "students/exams/<int:exam_pk>/clear/",
         answer_clear,
         name="answer_clear",
