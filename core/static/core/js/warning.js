@@ -2,6 +2,8 @@ jQuery_3_6_0(document).ready(function(){
     // When alt+tab mouseenter event fires twice,
     // when leaving the window and when coming back again,
     // therefore we can block the warning on blur and turn it back on again on focus
+    let warnings = 0;
+    let maxWarnings = 3;
     let windowWarningStarted = false;
     let blockWindowWarning = false;
 
@@ -33,6 +35,13 @@ jQuery_3_6_0(document).ready(function(){
         if (!e.matches){ // fullscreen exit
             jQuery_3_6_0("#js-main").addClass("d-none");
             jQuery_3_6_0("#js-fullscreen-splash").removeClass("d-none");
+            
+            warnings++;
+            const warningsLeft = maxWarnings - warnings;
+            jQuery_3_6_0(".js-warnings-left").text(warningsLeft);
+            if (warningsLeft === 0) {
+                jQuery_3_6_0(".js-0-warnings-left").removeClass("d-none");
+            }
             $('.modal').modal('hide');
             $('#modal-fullscreen-warning').modal('show');
         }
@@ -40,6 +49,12 @@ jQuery_3_6_0(document).ready(function(){
             if (!windowWarningStarted){
                 jQuery_3_6_0(document).mouseenter(function (e) {
                     if (!blockWindowWarning){
+                        warnings++;
+                        const warningsLeft = maxWarnings - warnings;
+                        jQuery_3_6_0(".js-warnings-left").text(warningsLeft);
+                        if (warningsLeft === 0) {
+                            jQuery_3_6_0(".js-0-warnings-left").removeClass("d-none");
+                        }
                         $('.modal').modal('hide');
                         $('#modal-window-warning').modal('show');
                     }
