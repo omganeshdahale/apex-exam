@@ -20,7 +20,7 @@ jQuery_3_6_0(document).ready(function(){
 
         if (diff <= 0){
             //clearInterval(handle);
-            submit_form.submit();
+            $submit_btn.click();
             return;
         }
         else if (diff <= duration/100 *10){

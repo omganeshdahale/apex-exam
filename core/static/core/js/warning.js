@@ -39,7 +39,10 @@ jQuery_3_6_0(document).ready(function(){
             warnings++;
             const warningsLeft = maxWarnings - warnings;
             jQuery_3_6_0(".js-warnings-left").text(warningsLeft);
-            if (warningsLeft === 0) {
+            if (warningsLeft < 0) {
+                jQuery_3_6_0("#submit-btn").click();
+            }
+            else if (warningsLeft === 0) {
                 jQuery_3_6_0(".js-0-warnings-left").removeClass("d-none");
             }
             $('.modal').modal('hide');
@@ -52,7 +55,10 @@ jQuery_3_6_0(document).ready(function(){
                         warnings++;
                         const warningsLeft = maxWarnings - warnings;
                         jQuery_3_6_0(".js-warnings-left").text(warningsLeft);
-                        if (warningsLeft === 0) {
+                        if (warningsLeft < 0) {
+                            jQuery_3_6_0("#submit-btn").click();
+                        }
+                        else if (warningsLeft === 0) {
                             jQuery_3_6_0(".js-0-warnings-left").removeClass("d-none");
                         }
                         $('.modal').modal('hide');
