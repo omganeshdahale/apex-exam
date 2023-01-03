@@ -5,6 +5,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import F
 from django.http import JsonResponse
 from django.urls import reverse
 from django.utils import timezone
@@ -338,3 +339,15 @@ def bookmark(request, exam_pk):
         msg = "Bookmark added."
 
     return JsonResponse({"status": "ok", "message": msg})
+
+
+@require_POST
+@login_required
+@is_verified_student
+def register_warning(request, exam_pk):
+    session = get_object_or_404(
+        Session, user=request.user, exam__pk=exam_pk, completed=False
+    )
+    session.warnings_count = F("warnings_count") + 1
+    session.save()
+    return JsonResponse({})

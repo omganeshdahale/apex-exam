@@ -2,8 +2,11 @@ jQuery_3_6_0(document).ready(function(){
     // When alt+tab mouseenter event fires twice,
     // when leaving the window and when coming back again,
     // therefore we can block the warning on blur and turn it back on again on focus
-    let warnings = 0;
-    let maxWarnings = 3;
+    let warnings = jQuery_3_6_0("#modal-window-warning").data("warnings");
+    const warnURL = jQuery_3_6_0("#modal-window-warning").data("href");
+    console.log(warnURL);
+    const csrfmiddlewaretoken = jQuery_3_6_0("input[name=csrfmiddlewaretoken]").val();
+    const maxWarnings = 3;
     let windowWarningStarted = false;
     let blockWindowWarning = false;
 
@@ -47,6 +50,17 @@ jQuery_3_6_0(document).ready(function(){
             }
             $('.modal').modal('hide');
             $('#modal-fullscreen-warning').modal('show');
+            jQuery_3_6_0.ajax({
+                type: "POST",
+                url: warnURL,
+                data: {
+                    csrfmiddlewaretoken: csrfmiddlewaretoken,
+                },
+                error: function(data) {
+                    console.error('FAILED WARNING SAVING');
+                    console.error(data);
+                }
+            });
         }
         else { // fullscreen enter
             if (!windowWarningStarted){
@@ -63,6 +77,17 @@ jQuery_3_6_0(document).ready(function(){
                         }
                         $('.modal').modal('hide');
                         $('#modal-window-warning').modal('show');
+                        jQuery_3_6_0.ajax({
+                            type: "POST",
+                            url: warnURL,
+                            data: {
+                                csrfmiddlewaretoken: csrfmiddlewaretoken,
+                            },
+                            error: function(data) {
+                                console.error('FAILED WARNING SAVING');
+                                console.error(data);
+                            }
+                        });
                     }
                 });
                 windowWarningStarted = true;

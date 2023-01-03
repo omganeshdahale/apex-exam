@@ -126,7 +126,7 @@
     </div>
 
     <!-- Window warning modal -->
-    <div id="modal-window-warning" class="modal" tabindex="-1" data-backdrop="static">
+    <div id="modal-window-warning" class="modal" tabindex="-1" data-backdrop="static" data-warnings={{ session.warnings_count }} data-href="{% url 'register_warning' session.exam.pk %}">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">

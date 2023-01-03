@@ -96,6 +96,7 @@ class Session(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     submitted = models.DateTimeField(null=True, blank=True)
     end_time = models.DateTimeField()  # exam end time when this session was created
+    warnings_count = models.PositiveIntegerField(default=0)
 
     class Meta:
         ordering = ("-created",)

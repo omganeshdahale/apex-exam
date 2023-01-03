@@ -49,4 +49,9 @@ urlpatterns = [
         name="question_list",
     ),
     path("students/exams/<int:exam_pk>/bookmark/", bookmark, name="bookmark"),
+    path(
+        "students/exams/<int:exam_pk>/warning/",
+        register_warning,
+        name="register_warning",
+    ),
 ]
