@@ -20,6 +20,11 @@ ANSWER_CHOICES = [
     (D, D),
 ]
 
+QUESTION_TYPE_CHOICES = [
+    ("M", "Multiple Choice"),
+    ("T", "Theory"),
+]
+
 
 def validate_max_duration(value):
     if value > timedelta(hours=23, minutes=59, seconds=59):
@@ -69,11 +74,14 @@ class Question(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     question = models.TextField(max_length=1000)
+    question_type = models.CharField(
+        max_length=1, choices=QUESTION_TYPE_CHOICES, default="M"
+    )
     image = models.ImageField(upload_to="question_images/", null=True, blank=True)
-    option_A = models.CharField(max_length=200)
-    option_B = models.CharField(max_length=200)
-    option_C = models.CharField(max_length=200)
-    option_D = models.CharField(max_length=200)
+    option_A = models.CharField(max_length=200, blank=True)
+    option_B = models.CharField(max_length=200, blank=True)
+    option_C = models.CharField(max_length=200, blank=True)
+    option_D = models.CharField(max_length=200, blank=True)
     correct_answer = models.CharField(max_length=1, choices=ANSWER_CHOICES, default=A)
     marks_on_correct_answer = models.FloatField(default=1)
     marks_on_wrong_answer = models.FloatField(default=0)
@@ -150,8 +158,11 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     answer = models.CharField(max_length=1, choices=ANSWER_CHOICES, default=A)
+    theory_answer = models.TextField(max_length=1000, blank=True)
 
     def get_answer_status(self):
+        if self.question.question_type == "T":
+            return True
         return self.answer == self.question.correct_answer
 
     def get_marks(self):
