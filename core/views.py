@@ -197,9 +197,11 @@ def exam_start(request, exam_pk):
 
         try:
             answer = Answer.objects.get(session=session, question=question)
-            answer = answer.answer
+            ans = answer.answer
+            theory_answer = answer.theory_answer
         except ObjectDoesNotExist:
-            answer = None
+            ans = None
+            theory_answer = None
 
         prev_q_num = q_num - 1 if q_num > 1 else None
         next_q_num = q_num + 1 if q_num < len(questions) else None
@@ -210,12 +212,14 @@ def exam_start(request, exam_pk):
                 "prev_q_num": prev_q_num,
                 "next_q_num": next_q_num,
                 "question": question.question,
+                "question_type": question.question_type,
                 "image_url": question.image.url if question.image else None,
                 "option_A": question.option_A,
                 "option_B": question.option_B,
                 "option_C": question.option_C,
                 "option_D": question.option_D,
-                "answer": answer,
+                "answer": ans,
+                "theory_answer": theory_answer,
                 "marks_on_correct_answer": question.marks_on_correct_answer,
                 "marks_on_wrong_answer": question.marks_on_wrong_answer,
             }
@@ -284,12 +288,18 @@ def answer_submit(request, exam_pk):
         raise PermissionDenied()
     questions = session.get_questions()
     q_num = int(request.POST.get("q_num"))
-    ans = request.POST.get("answer")
     question = questions[q_num - 1]
 
-    Answer.objects.update_or_create(
-        session=session, question=question, defaults={"answer": ans}
-    )
+    if question.question_type == "M":
+        ans = request.POST.get("answer")
+        Answer.objects.update_or_create(
+            session=session, question=question, defaults={"answer": ans}
+        )
+    elif question.question_type == "T":
+        ans = request.POST.get("theory_answer")
+        Answer.objects.update_or_create(
+            session=session, question=question, defaults={"theory_answer": ans}
+        )
 
     return JsonResponse({"status": "ok", "message": f'Answer "{ans}" saved.'})
 
