@@ -26,7 +26,9 @@ def students_list(request):
         student__branch=teacher.branch,
     )
     if search:
-        students = students.filter(Q(username__icontains=search) | Q(email__icontains=search))
+        students = students.filter(
+            Q(username__icontains=search) | Q(email__icontains=search)
+        )
 
     paginator = Paginator(students, 15)
     page = request.GET.get("page")
@@ -46,10 +48,7 @@ def students_list(request):
 def student_delete(request, pk):
     student = get_object_or_404(Student, pk=pk)
     teacher = request.user.teacher
-    if (
-        student.college != teacher.college
-        or student.branch != teacher.branch
-    ):
+    if student.college != teacher.college or student.branch != teacher.branch:
         raise PermissionDenied()
 
     student.delete()
@@ -68,7 +67,9 @@ def students_request_list(request):
         studentrequest__branch=teacher.branch,
     )
     if search:
-        students = students.filter(Q(username__icontains=search) | Q(email__icontains=search))
+        students = students.filter(
+            Q(username__icontains=search) | Q(email__icontains=search)
+        )
 
     paginator = Paginator(students, 15)
     page = request.GET.get("page")
@@ -198,20 +199,19 @@ def result_detail(request, pk):
 
     search = request.GET.get("search", None)
     if search:
-        answers = session.answer_set.filter(
-            question__question__icontains=search
-        ).order_by("question__created")
+        answers = (
+            session.get_mcq_answers()
+            .filter(question__question__icontains=search)
+            .order_by("question__created")
+        )
+        theory_answers = (
+            session.get_theory_answers()
+            .filter(question__question__icontains=search)
+            .order_by("question__created")
+        )
     else:
-        answers = session.answer_set.all().order_by("question__created")
+        answers = session.get_mcq_answers().order_by("question__created")
+        theory_answers = session.get_theory_answers().order_by("question__created")
 
-    paginator = Paginator(answers, 15)
-    page = request.GET.get("page")
-    try:
-        answers = paginator.page(page)
-    except PageNotAnInteger:
-        answers = paginator.page(1)
-    except EmptyPage:
-        answers = paginator.page(paginator.num_pages)
-
-    context = {"session": session, "answers": answers}
+    context = {"session": session, "answers": answers, "theory_answers": theory_answers}
     return render(request, "teachers/result_detail.html", context)

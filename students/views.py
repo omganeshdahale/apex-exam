@@ -96,20 +96,19 @@ def result_detail(request, pk):
 
     search = request.GET.get("search", None)
     if search:
-        answers = session.answer_set.filter(
-            question__question__icontains=search
-        ).order_by("question__created")
+        answers = (
+            session.get_mcq_answers()
+            .filter(question__question__icontains=search)
+            .order_by("question__created")
+        )
+        theory_answers = (
+            session.get_theory_answers()
+            .filter(question__question__icontains=search)
+            .order_by("question__created")
+        )
     else:
-        answers = session.answer_set.all().order_by("question__created")
+        answers = session.get_mcq_answers().order_by("question__created")
+        theory_answers = session.get_theory_answers().order_by("question__created")
 
-    paginator = Paginator(answers, 15)
-    page = request.GET.get("page")
-    try:
-        answers = paginator.page(page)
-    except PageNotAnInteger:
-        answers = paginator.page(1)
-    except EmptyPage:
-        answers = paginator.page(paginator.num_pages)
-
-    context = {"session": session, "answers": answers}
+    context = {"session": session, "answers": answers, "theory_answers": theory_answers}
     return render(request, "students/result_detail.html", context)

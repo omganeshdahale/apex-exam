@@ -47,30 +47,44 @@
         </span>
         <hr>
 
+
+        <p class="mb-2 font-weight-bold"> 
+            <span id="question"></span>
+        </p>
+        <div id="js-question-image-container" class="mb-4 d-none"><img id="js-question-image" src="#" class="img-fluid"></div>
+
         <!-- Question form -->
         <form id="question-form" method="POST" action="{% url 'answer_submit' session.exam.pk %}" class="font-20">
             {% csrf_token %}
             <input type="hidden" name="q_num">
-            <p class="mb-2 font-weight-bold"> 
-                <span id="question"></span>
-            </p>
-            <div id="js-question-image-container" class="mb-4 d-none"><img id="js-question-image" src="#" class="img-fluid"></div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="answer" id="option_A" value="A">
-                <label class="form-check-label" for="option_A"></label>
+            
+            <div id="js-options-container">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="option_A" value="A">
+                    <label class="form-check-label" for="option_A"></label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="option_B" value="B">
+                    <label class="form-check-label" for="option_B"></label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="option_C" value="C">
+                    <label class="form-check-label" for="option_C"></label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" id="option_D" value="D">
+                    <label class="form-check-label" for="option_D"></label>
+                </div>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="answer" id="option_B" value="B">
-                <label class="form-check-label" for="option_B"></label>
+
+            <div id="js-theory-container">
+                <div class="form-group">
+                    <label for="js-theory-textarea">Write an answer...</label>
+                    <textarea class="form-control" id="js-theory-textarea" rows="5" name="theory_answer"></textarea>
+                </div>
+                <button class="btn btn-success" ><i class="fas fa-save"></i> Save</button>
             </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="answer" id="option_C" value="C">
-                <label class="form-check-label" for="option_C"></label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="radio" name="answer" id="option_D" value="D">
-                <label class="form-check-label" for="option_D"></label>
-            </div>
+
         </form>
 
     </div>

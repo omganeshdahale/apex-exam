@@ -4,7 +4,9 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from users.models import Student
+from . import utils
 
 User = get_user_model()
 
@@ -18,6 +20,11 @@ ANSWER_CHOICES = [
     (B, B),
     (C, C),
     (D, D),
+]
+
+QUESTION_TYPE_CHOICES = [
+    ("M", "Multiple Choice"),
+    ("T", "Theory"),
 ]
 
 
@@ -61,6 +68,12 @@ class Exam(models.Model):
             marks += question.marks_on_correct_answer
         return marks
 
+    def get_mcq_questions(self):
+        return self.question_set.filter(question_type="M", deleted=None)
+
+    def get_theory_questions(self):
+        return self.question_set.filter(question_type="T", deleted=None)
+
     def __str__(self):
         return self.name
 
@@ -69,11 +82,14 @@ class Question(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     question = models.TextField(max_length=1000)
+    question_type = models.CharField(
+        max_length=1, choices=QUESTION_TYPE_CHOICES, default="M"
+    )
     image = models.ImageField(upload_to="question_images/", null=True, blank=True)
-    option_A = models.CharField(max_length=200)
-    option_B = models.CharField(max_length=200)
-    option_C = models.CharField(max_length=200)
-    option_D = models.CharField(max_length=200)
+    option_A = models.CharField(max_length=200, blank=True)
+    option_B = models.CharField(max_length=200, blank=True)
+    option_C = models.CharField(max_length=200, blank=True)
+    option_D = models.CharField(max_length=200, blank=True)
     correct_answer = models.CharField(max_length=1, choices=ANSWER_CHOICES, default=A)
     marks_on_correct_answer = models.FloatField(default=1)
     marks_on_wrong_answer = models.FloatField(default=0)
@@ -142,6 +158,12 @@ class Session(models.Model):
         percentage = self.get_marks() / self.get_max_marks() * 100
         return percentage >= self.exam.passing_percentage
 
+    def get_mcq_answers(self):
+        return self.answer_set.filter(question__question_type="M")
+
+    def get_theory_answers(self):
+        return self.answer_set.filter(question__question_type="T")
+
     def __str__(self):
         return self.exam.name
 
@@ -150,8 +172,21 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     answer = models.CharField(max_length=1, choices=ANSWER_CHOICES, default=A)
+    theory_answer = models.TextField(max_length=1000, blank=True)
+    accuracy = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    explanation = models.TextField(max_length=1000, blank=True)
+    evaluated_at = models.DateTimeField(null=True, blank=True)
+
+    def evaluate(self):
+        evaluation = utils.get_evaluation(self.question, self.theory_answer)
+        self.accuracy = float(evaluation["accuracy"])
+        self.explanation = evaluation["explanation"]
+        self.evaluated_at = timezone.now()
+        self.save()
 
     def get_answer_status(self):
+        if self.question.question_type == "T":
+            return self.accuracy >= 0.9
         return self.answer == self.question.correct_answer
 
     def get_marks(self):
