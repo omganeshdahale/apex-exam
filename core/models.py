@@ -68,6 +68,12 @@ class Exam(models.Model):
             marks += question.marks_on_correct_answer
         return marks
 
+    def get_mcq_questions(self):
+        return self.question_set.filter(question_type="M", deleted=None)
+
+    def get_theory_questions(self):
+        return self.question_set.filter(question_type="T", deleted=None)
+
     def __str__(self):
         return self.name
 
@@ -151,6 +157,12 @@ class Session(models.Model):
     def get_passing_status(self):
         percentage = self.get_marks() / self.get_max_marks() * 100
         return percentage >= self.exam.passing_percentage
+
+    def get_mcq_answers(self):
+        return self.answer_set.filter(question__question_type="M")
+
+    def get_theory_answers(self):
+        return self.answer_set.filter(question__question_type="T")
 
     def __str__(self):
         return self.exam.name

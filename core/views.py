@@ -65,20 +65,19 @@ def exam_detail(request, pk):
 
     search = request.GET.get("search", None)
     if search:
-        questions = exam.question_set.filter(deleted=None, question__icontains=search)
+        questions = exam.get_mcq_questions().filter(question__icontains=search)
+        theory_questions = exam.get_theory_questions().filter(
+            question__icontains=search
+        )
     else:
-        questions = exam.question_set.filter(deleted=None)
+        questions = exam.get_mcq_questions()
+        theory_questions = exam.get_theory_questions()
 
-    paginator = Paginator(questions, 15)
-    page = request.GET.get("page")
-    try:
-        questions = paginator.page(page)
-    except PageNotAnInteger:
-        questions = paginator.page(1)
-    except EmptyPage:
-        questions = paginator.page(paginator.num_pages)
-
-    context = {"exam": exam, "questions": questions}
+    context = {
+        "exam": exam,
+        "questions": questions,
+        "theory_questions": theory_questions,
+    }
     return render(request, "core/exam_detail.html", context)
 
 

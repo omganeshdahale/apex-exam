@@ -32,7 +32,10 @@
       </span>
     </div>
   </form>
-  
+
+  <br>
+  <h2>Multiple Choice Questions</h2>
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-sm">
             <thead class="thead-light">
@@ -74,7 +77,53 @@
         </table>
     </div>
 
-    {% include 'pagination.html' with page=answers %}
+    <br>
+    <h2>Theory Questions</h2>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-sm">
+          <thead class="thead-light">
+              <tr>
+                  <th scope="col">Question</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Answer status</th>
+                  <th scope="col">Marks obtain</th>
+                  <th scope="col">Answer</th>
+                  <th scope="col">Accuracy</th>
+                  <th scope="col">Remark</th>
+              </tr>
+          </thead>
+          <tbody id="search-table">
+              {% for answer in theory_answers %}
+                  <tr>
+                      <td>{{ answer.question }}</td>
+                      <td>
+                          {% if answer.question.image %}
+                              <a href="#" class="js-image-pop-up" data-toggle="modal" data-target=".bd-example-modal-lg">
+                                  <img src="{{ answer.question.image.url }}" class="img-thumbnail" style="width: 50px; height: 50px;">
+                              </a>
+                          {% else %}
+                              <span class="text-center">--</span>
+                          {% endif %}
+                      </td>
+                      <td>
+                          {% if answer.get_answer_status %}
+                              <span class="badge badge-success p-2">CORRECT</span>
+                          {% else %}
+                              <span class="badge badge-danger p-2">INCORRECT</span>
+                          {% endif %}
+                      </td>
+                      <td>{{ answer.get_marks }}</td>
+                      <td>{{ answer.theory_answer }}</td>
+                      <td>{{ answer.accuracy }}</td>
+                      <td>{{ answer.explanation }}</td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+
+
 
     <script type="text/javascript" src="{% static 'js/keep_params.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/image_preview.js' %}"></script>

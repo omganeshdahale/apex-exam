@@ -32,6 +32,9 @@
     </div>
   </form>
 
+    <br>
+    <h2>Multiple Choice Questions</h2>
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-sm">
             <thead class="thead-light">
@@ -75,7 +78,43 @@
         </table>
     </div>
 
-    {% include 'pagination.html' with page=questions %}
+
+    <br>
+    <h2>Theory Questions</h2>
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-sm">
+          <thead class="thead-light">
+              <tr>
+                  <th scope="col">Question</th>
+                  <th scope="col">Image</th>
+                  <th scope="col">Marks on correct answer</th>
+                  <th scope="col">Marks on wrong answer</th>
+                  <th scope="col"></th>
+              </tr>
+          </thead>
+          <tbody id="search-table">
+              {% for question in theory_questions %}
+                  <tr>
+                      <td>{{ question }}</td>
+                      <td>
+                          {% if question.image %}
+                              <a href="#" class="js-image-pop-up" data-toggle="modal" data-target=".bd-example-modal-lg">
+                                  <img src="{{ question.image.url }}" class="img-thumbnail" style="width: 50px; height: 50px;">
+                              </a>
+                          {% else %}
+                              <span class="text-center">--</span>
+                          {% endif %}
+                      </td>
+                      <td>{{ question.marks_on_correct_answer }}</td>
+                      <td>{{ question.marks_on_wrong_answer }}</td>
+                      <td><a href="{% url 'question_edit' question.pk %}" class="btn btn-sm btn-success px-3"><i class="fas fa-edit"></i> Edit</a></td>
+                  </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+
 
     <script type="text/javascript" src="{% static 'js/keep_params.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/image_preview.js' %}"></script>
