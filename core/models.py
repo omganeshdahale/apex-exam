@@ -4,7 +4,9 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from users.models import Student
+from . import utils
 
 User = get_user_model()
 
@@ -159,10 +161,20 @@ class Answer(models.Model):
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
     answer = models.CharField(max_length=1, choices=ANSWER_CHOICES, default=A)
     theory_answer = models.TextField(max_length=1000, blank=True)
+    accuracy = models.DecimalField(max_digits=3, decimal_places=2, default=0)
+    explanation = models.TextField(max_length=1000, blank=True)
+    evaluated_at = models.DateTimeField(null=True, blank=True)
+
+    def evaluate(self):
+        evaluation = utils.get_evaluation(self.question, self.theory_answer)
+        self.accuracy = float(evaluation["accuracy"])
+        self.explanation = evaluation["explanation"]
+        self.evaluated_at = timezone.now()
+        self.save()
 
     def get_answer_status(self):
         if self.question.question_type == "T":
-            return True
+            return self.accuracy >= 0.9
         return self.answer == self.question.correct_answer
 
     def get_marks(self):
