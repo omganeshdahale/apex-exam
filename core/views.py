@@ -13,6 +13,7 @@ from django.views.decorators.http import require_POST
 from .decorators import *
 from .forms import ExamForm, QuestionForm
 from .models import Exam, Question, Answer, Session
+from .tasks import evaluate_session
 
 
 @login_required
@@ -243,6 +244,8 @@ def exam_submit(request, exam_pk):
     session.completed = True
     session.submitted = timezone.now()
     session.save()
+
+    evaluate_session.delay(session.pk)
 
     return JsonResponse(
         {"status": "ok", "url": reverse("exam_submit_detail", args=[session.pk])}

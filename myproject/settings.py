@@ -169,3 +169,5 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASS")
 
 LOGIN_REDIRECT_URL = "redirect_on_login"
+
+CELERY_BROKER_URL = "redis://localhost:6379"
