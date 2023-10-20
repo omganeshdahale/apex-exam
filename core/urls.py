@@ -8,6 +8,11 @@ urlpatterns = [
     path("teachers/exams/<int:pk>/edit/", exam_edit, name="exam_edit"),
     path("teachers/exams/<int:pk>/delete/", exam_delete, name="exam_delete"),
     path(
+        "teachers/exams/<int:exam_pk>/upload-questions/",
+        import_questions,
+        name="import_questions",
+    ),
+    path(
         "teachers/exams/<int:exam_pk>/question-create/",
         question_create,
         name="question_create",

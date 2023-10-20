@@ -7,6 +7,39 @@
     <a href="{% url 'exam_edit' exam.pk %}" class="btn btn-info mb-1"><i class="fas fa-edit"></i> Edit Exam</a>
     <a href="{% url 'question_create' exam.pk %}" class="btn btn-success mb-1"><i class="fas fa-plus"></i> Add Question</a>
 
+    <button type="button" class="btn btn-success mb-1" data-toggle="modal" data-target="#upload_modal">
+        <i class="fas fa-upload mr-2"></i>Upload Questions CSV
+    </button>
+
+    <!-- Questions Upload Modal -->
+    <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog" aria-labelledby="upload_modalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Upload Bulk Questions</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+                <form id="questions_upload_form" method="POST" enctype="multipart/form-data" action="{% url 'import_questions' exam.pk %}">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <label for="file">Upload CSV</label>
+                        <input name="file" type="file" class="form-control-file" id="file">
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" form="questions_upload_form">
+                <i class="fas fa-upload mr-2"></i>Upload
+            </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
     <!-- Image pop up preview -->
     <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">

@@ -363,3 +363,24 @@ def register_warning(request, exam_pk):
     session.warnings_count = F("warnings_count") + 1
     session.save()
     return JsonResponse({})
+
+
+from tablib import Dataset
+from .resources import QuestionResource
+
+
+@require_POST
+@login_required
+@is_verified_teacher
+def import_questions(request, exam_pk):
+    exam = get_object_or_404(Exam, pk=exam_pk, user=request.user)
+    file = request.FILES["file"]
+    dataset = Dataset()
+    dataset.load(file.read().decode("utf-8"), format="csv")
+    result = QuestionResource(exam_pk).import_data(dataset, dry_run=True)
+    if result.has_errors():
+        messages.error(request, "Error importing questions. Please review the file.")
+    else:
+        QuestionResource(exam_pk).import_data(dataset, dry_run=False)
+        messages.success(request, "Questions imported successfully.")
+    return redirect("exam_detail", pk=exam_pk)
