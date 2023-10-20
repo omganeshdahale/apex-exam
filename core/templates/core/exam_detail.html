@@ -13,7 +13,7 @@
 
     <!-- Questions Upload Modal -->
     <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog" aria-labelledby="upload_modalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">Upload Bulk Questions</h5>
@@ -25,7 +25,10 @@
                 <form id="questions_upload_form" method="POST" enctype="multipart/form-data" action="{% url 'import_questions' exam.pk %}">
                     {% csrf_token %}
                     <fieldset class="form-group">
-                        <label for="file">Upload CSV</label>
+                        <p for="file">
+                            Upload CSV with following rows -<br>
+                            <span class="text-info">id, question, option_A, option_B, option_C, option_D, correct_answer, marks_on_correct_answer, marks_on_wrong_answer</span>
+                        </p>
                         <input name="file" type="file" class="form-control-file" id="file">
                     </fieldset>
                 </form>

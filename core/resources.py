@@ -5,7 +5,7 @@ from .models import Question, Exam
 class QuestionResource(resources.ModelResource):
     class Meta:
         model = Question
-        exclude = ("exam", "image", "created", "deleted")
+        exclude = ("exam", "question_type", "image", "created", "deleted")
 
     def __init__(self, exam_pk):
         self.exam = Exam.objects.get(pk=exam_pk)
