@@ -8,9 +8,10 @@ class ExamForm(forms.ModelForm):
         fields = [
             "name",
             "duration",
-            "passing_percentage",
             "start_time",
             "end_time",
+            "no_of_questions",
+            "passing_percentage",
             "show_result",
         ]
         widgets = {

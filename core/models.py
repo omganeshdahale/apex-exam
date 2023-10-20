@@ -3,6 +3,7 @@ from datetime import timedelta
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils import timezone
 from users.models import Student
@@ -53,13 +54,16 @@ class Exam(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     show_result = models.BooleanField()
+    no_of_questions = models.PositiveIntegerField(
+        "Number of questions", default=1, validators=[MinValueValidator(1)]
+    )
 
     class Meta:
         ordering = ("-created",)
 
     @admin.display(description="no. of questions")
     def get_num_questions(self):
-        return self.question_set.filter(deleted=None).count()
+        return min(self.question_set.filter(deleted=None).count(), self.no_of_questions)
 
     @admin.display(description="max marks")
     def get_max_marks(self):
@@ -123,7 +127,7 @@ class Session(models.Model):
         rand = random.Random(self.seed)
         rand.shuffle(questions)
 
-        return questions
+        return questions[: self.exam.no_of_questions]
 
     @admin.display(description="no. of attempted questions")
     def get_num_attempted_que(self):
