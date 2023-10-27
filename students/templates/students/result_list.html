@@ -29,7 +29,6 @@
                     <th scope="col">Passing status</th>
                     <th scope="col">Marks obtain</th>
                     <th scope="col">Submitted on</th>
-                    <th scope="col"></th>
                 </tr>
             </thead>
             <tbody id="search-table">
@@ -51,7 +50,6 @@
                         </td>
                         <td>{{ session.get_marks }}</td>
                         <td>{{ session.submitted|date:"M d, Y" }}</td>
-                        <td><a href="{% url 'students:result_detail' session.pk %}" class="btn btn-sm btn-info"><i class="fas fa-eye"></i> View</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
