@@ -384,3 +384,24 @@ def import_questions(request, exam_pk):
         QuestionResource(exam_pk).import_data(dataset, dry_run=False)
         messages.success(request, "Questions imported successfully.")
     return redirect("exam_detail", pk=exam_pk)
+
+
+@require_POST
+@login_required
+@is_verified_teacher
+def duplicate_exam(request, pk):
+    exam = get_object_or_404(Exam, pk=pk, user=request.user)
+    questions = exam.question_set.filter(deleted=None)
+
+    exam.pk = None
+    exam.name = f"{exam.name} (copy)"
+    exam.save()
+
+    for question in questions:
+        new_question = question
+        new_question.pk = None
+        new_question.exam = exam
+        new_question.save()
+
+    messages.success(request, f"Exam duplicated successfully.")
+    return redirect("exam_detail", pk=exam.pk)

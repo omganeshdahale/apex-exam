@@ -7,6 +7,7 @@ urlpatterns = [
     path("teachers/exams/<int:pk>/", exam_detail, name="exam_detail"),
     path("teachers/exams/<int:pk>/edit/", exam_edit, name="exam_edit"),
     path("teachers/exams/<int:pk>/delete/", exam_delete, name="exam_delete"),
+    path("teachers/exams/<int:pk>/duplicate/", duplicate_exam, name="duplicate_exam"),
     path(
         "teachers/exams/<int:exam_pk>/upload-questions/",
         import_questions,

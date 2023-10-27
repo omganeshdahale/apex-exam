@@ -44,7 +44,7 @@ def validate_min_duration(value):
 class Exam(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200)
     duration = models.DurationField(
         default=timedelta(hours=1),
         validators=[validate_max_duration, validate_min_duration],

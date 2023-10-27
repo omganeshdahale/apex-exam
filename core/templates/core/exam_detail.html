@@ -11,6 +11,13 @@
         <i class="fas fa-upload mr-2"></i>Upload Questions CSV
     </button>
 
+    <form method="POST" action="{% url 'duplicate_exam' exam.pk %}" class="d-inline-block">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success mb-1" >
+            <i class="fas fa-copy mr-2"></i>Duplicate Exam
+        </button>
+    </form>
+
     <!-- Questions Upload Modal -->
     <div class="modal fade" id="upload_modal" tabindex="-1" role="dialog" aria-labelledby="upload_modalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
